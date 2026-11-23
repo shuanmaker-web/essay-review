@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>學測作文講評</title>
+<meta name="theme-color" content="#d62839">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="作文講評">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Noto+Sans+TC:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday classroom tool, calm and legible from the back row
+   IDEA a graded composition sheet: ruled paper, red-pen corrections, highlighter on good phrases
+   PICTURE the student's essay itself on ruled paper, errors numbered in red, revealed one by one
+   COLOUR white paper, near-black ink, red pen #d62839 as the flat header field, highlighter yellow, blue for added content
+   TYPE Noto Sans TC for UI, Source Serif 4 for essays, Caveat for handwritten red-pen fixes
+   LAYOUT wide: paper left, numbered margin notes right; phone: paper then notes */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121214);--ink:light-dark(#1d1d1f,#ececef);--mute:light-dark(#6b6b72,#9a9aa3);--line:light-dark(#e3e6ee,#2a2b31);--rule:light-dark(#dbe4f3,#24283a);--paper:light-dark(#ffffff,#1a1a1e);--red:light-dark(#d62839,#ff5d6c);--redsoft:light-dark(#fde8ea,#3a1a1f);--hi:light-dark(#ffe45c,#6b5a00);--blue:light-dark(#1f5fd1,#7aa7ff);--chip:light-dark(#f3f4f7,#24252b);--fs:21px}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans TC",system-ui,sans-serif;overflow-x:clip}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+header{background:var(--red);color:#fff;padding:14px max(4vw,16px) 0;position:sticky;top:0;z-index:5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between}
+h1{font-size:clamp(24px,3vw,32px);line-height:1.05;margin:0;font-weight:800;letter-spacing:-.01em}
+.essays{display:flex;gap:6px;flex-wrap:wrap}
+.essays button{border:2px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:999px;padding:8px 16px;min-height:44px;font-weight:600}
+.essays button[aria-pressed=true]{background:#fff;color:#b01e2e;border-color:#fff}
+.fsz{display:flex;gap:4px}
+.fsz button{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:10px;width:44px;height:44px;font-weight:800}
+nav{display:flex;gap:2px;margin-top:12px;overflow-x:auto}
+nav button{border:0;background:transparent;color:rgba(255,255,255,.85);padding:10px 18px;border-radius:12px 12px 0 0;font-weight:600;min-height:44px;flex:none}
+nav button[aria-selected=true]{background:var(--bg);color:var(--ink)}
+main{padding:20px max(4vw,16px) 48px;max-width:1320px;margin:0 auto}
+.prompt{border:1.5px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:15px;color:var(--mute)}
+.prompt b{color:var(--ink)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;background:var(--chip);border-radius:12px;padding:4px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:8px 14px;min-height:40px;font-weight:600;color:var(--mute)}
+.seg button[aria-pressed=true]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tog{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:8px 14px;min-height:44px;font-weight:600}
+.tog[aria-pressed=true]{border-color:var(--ink)}
+.count{margin-left:auto;color:var(--mute);font-size:15px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.paper{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,36px);font:var(--fs)/2 "Source Serif 4",Georgia,serif;background-image:repeating-linear-gradient(transparent 0 calc(var(--fs)*2 - 1px),var(--rule) calc(var(--fs)*2 - 1px) calc(var(--fs)*2));background-origin:content-box;background-clip:content-box}
+.paper p{margin:0 0 calc(var(--fs)*2);text-indent:2em}
+.paper p:last-child{margin-bottom:0}
+.err{border-radius:4px}
+.m-mark .err{text-decoration:underline wavy var(--red) 1.5px;text-underline-offset:5px;cursor:pointer}
+.m-mark .err:hover{background:var(--redsoft)}
+.err sup{display:none;color:var(--red);font:700 .55em "Noto Sans TC",sans-serif;margin-left:2px}
+.m-mark .err sup,.m-fix .err sup{display:inline}
+.fx{display:none;font-family:Caveat,cursive;color:var(--red);font-size:1.25em;line-height:1;margin-left:.3em}
+.err.on .w{text-decoration:line-through var(--red) 2px;color:var(--mute)}
+.err.on .fx{display:inline}
+.err.on{text-decoration:none!important;cursor:default}
+.flash{animation:fl 1.2s}
+@keyframes fl{0%,60%{background:var(--hi)}100%{background:transparent}}
+@media(prefers-reduced-motion:reduce){.flash{animation:none}}
+.notes{display:flex;flex-direction:column;gap:8px;position:sticky;top:150px;max-height:calc(100vh - 170px);overflow:auto;padding-right:4px}
+@media(max-width:900px){.notes{position:static;max-height:none}}
+.note{display:grid;grid-template-columns:2em minmax(0,1fr);gap:4px 8px;text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px;font-size:15px}
+.note .n{grid-row:span 3;width:1.8em;height:1.8em;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.note .wr{font-family:"Source Serif 4",serif;text-decoration:line-through var(--red) 1.5px;color:var(--mute)}
+.note .ri{font-family:"Source Serif 4",serif;font-weight:600;color:var(--red)}
+.note .ex{color:var(--mute);font-size:14px}
+.note:not(.on) .ri,.note:not(.on) .ex{display:none}
+.note:not(.on)::after{content:"點一下揭曉";grid-column:2;color:var(--mute);font-size:13px}
+.tag{display:inline-block;background:var(--chip);border-radius:6px;padding:0 6px;font-size:12px;margin-left:6px;color:var(--mute);font-family:"Noto Sans TC",sans-serif;text-decoration:none}
+.hint{color:var(--mute);font-size:15px;border:1.5px dashed var(--line);border-radius:12px;padding:14px}
+.score{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px;align-items:start}
+@media(max-width:800px){.score{grid-template-columns:minmax(0,1fr)}}
+.total{border:1.5px solid var(--line);border-radius:16px;padding:20px}
+.big{font-size:clamp(56px,9vw,88px);font-weight:800;line-height:1;color:var(--red);white-space:nowrap}
+.big small{font-size:.35em;color:var(--mute);font-weight:600}
+.lvl{font-weight:700;font-size:20px;margin:6px 0 16px}
+.scale{display:grid;grid-template-columns:5fr 5fr 5fr 4fr 2fr;gap:3px;position:relative;margin-top:28px}
+.scale div{background:var(--chip);border-radius:4px;padding:6px 4px;text-align:center;font-size:13px}
+.scale div.cur{background:var(--redsoft);color:var(--red);font-weight:700}
+.pin{position:absolute;top:-24px;transform:translateX(-50%);color:var(--red);font-weight:800;font-size:13px;white-space:nowrap}
+.rows{display:flex;flex-direction:column;gap:14px}
+.row h3{display:flex;justify-content:space-between;margin:0 0 6px;font-size:17px}
+.row h3 span{white-space:nowrap;color:var(--red)}
+.meter{height:12px;background:var(--chip);border-radius:6px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--red);border-radius:6px}
+.row p{margin:6px 0 0;font-size:15px;color:var(--mute)}
+.est{font-size:13px;color:var(--mute);margin-top:14px}
+.rev mark{background:none;color:inherit}
+.rev.sp mark{background:linear-gradient(transparent 55%,var(--hi) 55%)}
+.rev mark sub{display:none;font:600 .5em "Noto Sans TC",sans-serif;color:var(--mute);margin-left:3px;vertical-align:baseline}
+.rev.sp.lb mark sub{display:inline}
+.rev .ad{}
+.rev.sa .ad{color:var(--blue);font-weight:600;text-decoration:underline 2px;text-underline-offset:5px}
+.orig{display:none;font:15px/1.7 "Source Serif 4",serif;color:var(--mute);border-left:4px solid var(--line);padding:4px 0 4px 12px;margin:0 0 12px;text-indent:0!important}
+.rev.cmp .orig{display:block}
+.rnote{font-size:15px;color:var(--mute);margin-top:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.card{border:1.5px solid var(--line);border-radius:16px;padding:18px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card p{margin:0 0 10px;color:var(--mute);font-size:15px}
+.pair{font-family:"Source Serif 4",serif;font-size:17px;border-top:1px solid var(--line);padding:8px 0}
+.pair .a{text-decoration:line-through var(--red) 1.5px;color:var(--mute);display:block}
+.pair .b{color:var(--red);font-weight:600;display:block}
+.pair .b::before{content:"→ "}
+.rub{margin-top:20px}
+.rub summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>學測作文講評</h1>
+    <div class="essays" id="essays"></div>
+    <div class="fsz"><button id="fsm" aria-label="字變小">A−</button><button id="fsp" aria-label="字變大">A+</button></div>
+  </div>
+  <nav id="tabs" role="tablist">
+    <button role="tab" data-t="mark">原文批改</button>
+    <button role="tab" data-t="score">評分</button>
+    <button role="tab" data-t="rev">修改範文</button>
+    <button role="tab" data-t="common">共同問題</button>
+  </nav>
+</header>
+<main id="main"></main>
+<script>
+{
+const E=[
+{name:'作文一',topic:'Gap Year',
+prompt:'<b>題目（課本 p.31）</b>：歐美許多畢業生會用一年 gap year 擔任志工、旅遊、學語言等。第一段：你是否認同這樣的趨勢？第二段：若你有一年 gap year，會怎麼安排？說明原因。',
+paras:[
+['As far as I\'m concerned, using a year to broaden ',['our horizen','their horizons','拼字','horizon 拼字；broaden one\'s horizons 固定用複數；人稱要和後文的 they 統一'],' is definitely a positive trend ',['to every people who graduated recently','for recent graduates','用法','every 後接單數名詞；trend 後面用 for'],'. People can use this year to ',['promote their own ability any different aspect','improve themselves in different aspects','用法','promote 不是「提升能力」；aspect 前漏了介系詞 in'],'. First, they can learn a new language in order to ',['make them be more competitive in workplace','make themselves more competitive in the workplace','文法','make + O + adj.，中間不加 be；主受詞相同用 themselves；workplace 前加 the'],'. Second, they can learn how to talk to other people by traveling the world. Last but not least, they will have more time to find ',['what is they really like','what they really like','文法','間接問句要用直述語序：what + S + V'],'. In conclusion, I couldn\'t ',['agree more to','agree more with','用法','agree with 固定搭配'],' this meaningful year.'],
+['If I get a chance to enjoy my gap year, I will use this year to travel the world. This dream is very hard to fulfill because ',['it will spend a lot of money','it costs a lot of money','用法','spend 的主詞是「人」；事情花錢用 cost'],'. However, we only live once. Traveling the world can bring ',['many advantage','many advantages','文法','many 後接複數名詞'],'. ',['To being with','To begin with','拼字','固定用語，筆誤'],', it can ',['obrbously','obviously','拼字','拼字'],' improve our English ability by using the language every single day. Additionally, we will communicate with ',['lots of foregner','lots of foreigners','拼字','foreigner 拼字，並用複數'],' from different cultures. Lastly, we will learn how to ',['solve the problem','solve problems','文法','泛指要用複數 problems，不加 the'],' ',['by our ownself','on our own','用法','沒有 ownself 這個字；用 on our own 或 by ourselves'],'. Overall, traveling the world is not just ',['a interesting','an interesting','文法','母音開頭的字前面用 an'],' journey. It\'s a class which can teach us the knowledge that school ',['can\'t tell us','can\'t teach us','用法','tell 是「告訴」，傳授知識用 teach'],'.']
+],
+total:14,range:'13–14',level:'可（上段，接近「優」）',
+rows:[['內容',3,5,'立場清楚；但題目要求說明「如何安排」，第二段只寫 travel the world，缺少具體計畫（去哪裡、經費從哪來）。'],['組織',4,5,'兩段都有 First / Second / Lastly，轉折清楚；但第一段 talk to other people 與第二段內容重複。'],['文法句構',2.5,4,'人稱 they / we / our 混用；條件句時態不一致；有數個中式英文句。'],['字彙拼字',2.5,4,'horizen、obrbously、foregner 拼錯；promote ability 用字不當。'],['體例',2,2,'分段、標點、字數皆符合要求。']],
+rev:[
+'[[From my perspective|表個人看法]], taking a gap year is definitely a positive trend for recent graduates. It gives them a chance to broaden their horizons and improve themselves in different aspects. [[Firstly|首先]], they can learn a new language, which will make them more competitive in the workplace. Secondly, [[by traveling|By V-ing]] around the world, they can learn how to communicate with people from various backgrounds. [[Last but not least|最後]], they will have more time to discover what they are truly passionate about. [[Overall|整體而言]], I couldn\'t agree more with this meaningful trend.',
+'If I had the chance to take a gap year, I would use it to travel around the world. This dream is hard to fulfill because it costs a great deal of money, {{so I would work part-time for six months to save up before setting off}}. However, we only live once, and traveling can bring many advantages. [[To begin with|首先]], it would greatly improve my English, since I would have to use the language every single day. [[Additionally|此外]], I would interact with people from different cultures, which would make me more open-minded. [[Lastly|最後]], I would learn how to solve problems on my own when things go wrong. In short, traveling the world is not just an interesting journey; it is a class that teaches us what school cannot.'],
+rnote:'藍字是新增的具體安排，示範內容分要怎麼補；學生可以換成自己的計畫。'},
+{name:'作文二',topic:'晚自習／假日輔導',
+prompt:'<b>題目（課本 p.33）</b>：許多高中提供課後自習教室或假日輔導課。第一段：根據自己或他人的經驗，討論這種措施的優缺點。第二段：你心目中理想的課後讀書安排（環境、時間長短、是否有人伴讀等），並說明原因。',
+paras:[
+[['Lots of schools will provide classroom and class','Many schools offer self-study classrooms and tutoring classes','文法','描述現況用現在式；classroom、class 是可數名詞，要用複數'],' at night or ',['in holiday','on holidays','用法','節日、假日前面用 on，並用複數'],' in order to ',['promote student\'s testing performance','improve students\' test performance','文法','「學生們」要用複數所有格 students\'；promote 改 improve'],'. This phenomenon can bring both ',['advantage and disadvantage','advantages and disadvantages','文法','both 後接複數'],'. ',['In the benefit hand','On the one hand','用法','固定句型 On the one hand… On the other hand…（課本 p.32）'],', students can get ',['better environment','a better environment','文法','可數單數名詞要加冠詞'],' to focus on their ',['schoolworks','schoolwork','文法','schoolwork 不可數'],'. ',['I have experienced this kind of study form, it can','I have experienced this kind of study, and it can','文法','逗號不能直接連接兩個完整句子（comma splice），要加 and 或改成句號'],' obviously improve our study ',['efficency','efficiency','拼字','拼字'],' by giving us a ',['quient','quiet','拼字','拼字：quiet 安靜的'],' classroom and ',['some teachers who can let us ask them some academic questions','teachers whom we can ask academic questions','用法','句子太繞，直接說 teachers whom we can ask'],'. ',['In disadvantage hand','On the other hand','用法','固定句型'],', ',['increasing time which we need to go to school','the extra time spent at school','用法','中式結構；改成名詞片語更清楚'],' might ',['disturb','disrupt','用法','打亂計畫用 disrupt；disturb 是打擾某人'],' ',['some of students\' learning plan','some students\' learning plans','文法','some of 後面要接 the/所有格；plan 用複數'],' and ',['make them spending','make them spend','文法','make + O + 原形動詞'],' more time on commuting.'],
+['As far as I\'m concerned, ',['the best learning plan which after school has','my ideal after-school study plan has','文法','關係子句 which after school 沒有動詞，結構錯誤'],' three key points. Firstly, the learning time needs ',['more than three hours','about three hours','內容','與後文 7 點到 10 點（剛好三小時）矛盾'],', from seven o\'clock to ten o\'clock',[', this duration is the most moderate time','. This length is the most suitable','文法','逗號接句；moderate 不適合這樣用。內容上還要補「為什麼」'],'. Additionally, the learning space needs to be extremely ',['quient','quiet','拼字','拼字'],' so that I can ',['be more focus','concentrate better','文法','focus 是動詞，這裡不能當形容詞'],'. Lastly, ',['we like','I prefer','用法','人稱要統一用 I'],' to study alone because ',['friends will steal my attention','friends can easily distract me','用法','steal my attention 是中式英文'],'. Overall, ',['although providing classrooms and class can increase some students score, but','although providing classrooms and classes can increase some students\' scores,','文法','although 和 but 只能留一個；students\' scores 所有格'],' we can\'t ',['oversee','overlook','用法','oversee 是「監督」，「忽視」用 overlook'],' the ',['disadvantage','disadvantages','文法','複數'],' of this kind of learning form.']
+],
+total:12.5,range:'12–13',level:'可',
+rows:[['內容',3.5,5,'有個人經驗，第二段也照提示寫到時間、環境、是否有人伴讀；但時間安排缺理由，且「超過三小時」和「7–10 點」互相矛盾。'],['組織',3,5,'結論放錯段：第二段最後一句 Overall… 又回到優缺點，應移到第一段結尾。'],['文法句構',2,4,'兩處逗號接句（comma splice）、although…but 連用、make them spending。'],['字彙拼字',2.5,4,'quient 拼錯兩次、efficency；oversee 誤當 overlook 用。'],['體例',1.5,2,'標點有誤；人稱 I / we 混用。']],
+rev:[
+'Many schools offer self-study classrooms at night or tutoring sessions on holidays in order to improve students\' test performance. [[While this practice has positive effects, it also has negative consequences|正負面影響]]. [[On the one hand|一方面]], students can study in a better environment and focus on their schoolwork. From my own experience, staying at school at night has greatly improved my study efficiency, because the classroom is quiet and there are teachers whom we can ask whenever we have academic questions. [[On the other hand|另一方面]], the extra time spent at school might disrupt some students\' own learning plans and force them to spend more time commuting. {{Therefore, }}[[the pros and cons of this policy should be carefully weighed|利弊權衡]].',
+'[[As far as I\'m concerned|表個人看法]], an ideal after-school study plan should include three key elements. [[Firstly|首先]], each session should last about three hours, from seven to ten p.m. {{This is long enough for me to review the day\'s lessons, but not so long that I feel exhausted the next morning.}} [[Additionally|此外]], the study space must be extremely quiet so that I can concentrate fully. [[Lastly|最後]], I prefer to study alone because chatting with friends can easily distract me. [[Overall|整體而言]], if these three conditions are met, after-school study can truly help students make progress.'],
+rnote:'第一段最後一句：原本放在第二段結尾的結論移到這裡。藍字：補上時間安排的理由。'}
+];
+const COMMON=[
+['人稱不統一','開頭決定用 I、we 或 they，整篇照用，不然閱卷老師一定會扣分。',[['we like to study alone because friends will steal my attention','I prefer to study alone because friends can easily distract me'],['using a year to broaden our horizen… for every people…','taking a gap year… helps graduates broaden their horizons']]],
+['第二段不夠具體','學測第二段幾乎都要寫「具體做法＋原因」，只寫一句計畫拿不到內容高分。',[['I will use this year to travel the world.','…so I would work part-time for six months to save up before setting off.'],['the learning time needs more than three hours','about three hours — long enough to review, not so long that I feel exhausted']]],
+['中式英文','直接換成課本 p.30、p.32 的實用句型。',[['promote their own ability','improve themselves'],['In the benefit hand / In disadvantage hand','On the one hand / On the other hand'],['steal my attention','distract me']]],
+['連接詞與逗號','although / because 不再接 but / so；逗號不能連接兩個完整句子。',[['Although …, but we can\'t …','Although …, we can\'t …'],['I have experienced this kind of study form, it can …','I have experienced this kind of study, and it can …']]]
+];
+const LV=[['劣',0,4],['差',5,9],['可',10,14],['優',15,18],['特優',19,20]];
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const store={get(k,d){try{const v=localStorage.getItem('ew-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ew-'+k,JSON.stringify(v))}catch(e){}}};
+const S={e:store.get('e',0),t:store.get('t','mark'),mode:'mark',fs:store.get('fs',21),on:new Set(),sp:true,sa:true,cmp:false};
+const main=document.getElementById('main');
+function errs(){const a=[];E[S.e].paras.forEach(p=>p.forEach(x=>{if(Array.isArray(x))a.push(x)}));return a}
+function origPlain(p){return p.map(x=>Array.isArray(x)?x[0]:x).join('')}
+function rich(s){return esc(s).replace(/\[\[(.+?)\|(.+?)\]\]/g,'<mark>$1<sub>$2</sub></mark>').replace(/\{\{(.+?)\}\}/g,'<span class="ad">$1</span>')}
+function viewMark(){
+  const ev=E[S.e];let i=0;
+  const paper=ev.paras.map(p=>'<p>'+p.map(x=>{if(!Array.isArray(x))return esc(x);const n=i++;const on=S.mode==='fix'||S.on.has(n);return `<span class="err${on?' on':''}" data-i="${n}"><span class="w">${esc(x[0])}</span><sup>${n+1}</sup><span class="fx">${esc(x[1])}</span></span>`}).join('')+'</p>').join('');
+  const list=errs();
+  const shown=S.mode==='fix'?list.length:S.on.size;
+  const notes=S.mode==='plain'?'<div class="hint">先請學生自己找錯：這一篇共有 <b>'+list.length+'</b> 處要修改。找完再切換到「標出錯誤」，逐一點開答案。</div>':list.map((x,n)=>{const on=S.mode==='fix'||S.on.has(n);return `<button class="note${on?' on':''}" data-i="${n}"><span class="n">${n+1}</span><span class="wr">${esc(x[0])}</span><span class="ri">${esc(x[1])}<span class="tag">${x[2]}</span></span><span class="ex">${esc(x[3])}</span></button>`}).join('');
+  return `<div class="prompt">${ev.prompt}</div>
+  <div class="bar"><div class="seg" id="mode">${[['plain','純文字'],['mark','標出錯誤'],['fix','顯示全部修正']].map(([k,l])=>`<button data-m="${k}" aria-pressed="${S.mode===k}">${l}</button>`).join('')}</div>
+  ${S.mode==='mark'?'<button class="tog" id="all">全部揭曉</button><button class="tog" id="reset">重新隱藏</button>':''}
+  <span class="count">${S.mode==='plain'?'共 '+list.length+' 處':'已揭曉 '+shown+' / '+list.length}</span></div>
+  <div class="grid"><div class="paper m-${S.mode}" id="paper">${paper}</div><div class="notes" id="notes">${notes}</div></div>`;
+}
+function viewScore(){
+  const ev=E[S.e];const t=ev.total;
+  const cur=LV.find(l=>t>=l[1]-.5&&t<=l[2]+.5)||LV[2];
+  return `<div class="score"><div class="total">
+  <div class="big">${ev.range}<small> / 20</small></div>
+  <div class="lvl">等級：${ev.level}</div>
+  <div class="scale"><span class="pin" style="left:${t/21*100}%">▼ ${ev.range}</span>${LV.map(l=>`<div class="${l===cur?'cur':''}">${l[0]}<br>${l[1]}–${l[2]}</div>`).join('')}</div>
+  <p class="est">分數是依照片估的，給老師參考。學測英文作文滿分 20 分：內容 5、組織 5、文法句構 4、字彙拼字 4、體例 2。</p></div>
+  <div class="rows">${ev.rows.map(r=>`<div class="row"><h3>${r[0]}<span>${r[1]} / ${r[2]}</span></h3><div class="meter"><i style="width:${r[1]/r[2]*100}%"></i></div><p>${esc(r[3])}</p></div>`).join('')}</div></div>
+  <details class="rub"><summary>學測作文評分等級對照</summary><div class="scroll"><table><thead><tr><th>等級</th><th>分數</th><th>大致表現</th></tr></thead><tbody>
+  <tr><td>特優</td><td>19–20</td><td>切題、內容充實，組織嚴謹，文法字彙幾乎無誤</td></tr>
+  <tr><td>優</td><td>15–18</td><td>內容具體、段落分明，偶有小錯不影響理解</td></tr>
+  <tr><td>可</td><td>10–14</td><td>大致切題但發展不足，錯誤較多，部分影響閱讀</td></tr>
+  <tr><td>差</td><td>5–9</td><td>內容空泛或部分離題，錯誤多且影響理解</td></tr>
+  <tr><td>劣</td><td>0–4</td><td>幾乎未完成或嚴重離題</td></tr></tbody></table></div></details>`;
+}
+function viewRev(){
+  const ev=E[S.e];
+  const cls=['rev',S.sp?'sp lb':'',S.sa?'sa':'',S.cmp?'cmp':''].join(' ');
+  return `<div class="bar"><button class="tog" id="sp" aria-pressed="${S.sp}">標示課本句型</button><button class="tog" id="sa" aria-pressed="${S.sa}">標示新增內容</button><button class="tog" id="cmp" aria-pressed="${S.cmp}">對照原文</button></div>
+  <div class="paper ${cls}">${ev.rev.map((r,k)=>`<p><span class="orig">原文：${esc(origPlain(ev.paras[k]))}</span>${rich(r)}</p>`).join('')}</div>
+  <p class="rnote">${ev.rnote} 黃色螢光：課本 p.30、p.32 的實用句型。</p>`;
+}
+function viewCommon(){
+  return `<div class="cards">${COMMON.map((c,k)=>`<div class="card"><h3>${k+1}. ${c[0]}</h3><p>${c[1]}</p>${c[2].map(p=>`<div class="pair"><span class="a">${esc(p[0])}</span><span class="b">${esc(p[1])}</span></div>`).join('')}</div>`).join('')}</div>`;
+}
+function render(){
+  document.documentElement.style.setProperty('--fs',S.fs+'px');
+  document.getElementById('essays').innerHTML=E.map((x,k)=>`<button data-e="${k}" aria-pressed="${k===S.e}" ${S.t==='common'?'disabled style="opacity:.5"':''}>${x.name}｜${x.topic}</button>`).join('');
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===S.t));
+  main.innerHTML=S.t==='mark'?viewMark():S.t==='score'?viewScore():S.t==='rev'?viewRev():viewCommon();
+}
+function reveal(n){
+  if(S.mode!=='mark')return;
+  S.on.add(n);
+  const y=window.scrollY;render();window.scrollTo(0,y);
+  const sp=main.querySelector(`.err[data-i="${n}"]`);
+  if(sp){sp.classList.add('flash');const r=sp.getBoundingClientRect();if(r.top<140||r.bottom>innerHeight)sp.scrollIntoView({block:'center',behavior:'smooth'})}
+}
+document.getElementById('essays').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;S.e=+b.dataset.e;S.on.clear();store.set('e',S.e);render()});
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.t=b.dataset.t;store.set('t',S.t);render();window.scrollTo(0,0)});
+document.getElementById('fsm').addEventListener('click',()=>{S.fs=Math.max(15,S.fs-2);store.set('fs',S.fs);render()});
+document.getElementById('fsp').addEventListener('click',()=>{S.fs=Math.min(34,S.fs+2);store.set('fs',S.fs);render()});
+main.addEventListener('click',e=>{
+  const m=e.target.closest('[data-m]');if(m){S.mode=m.dataset.m;render();return}
+  const er=e.target.closest('.err,.note');if(er){reveal(+er.dataset.i);return}
+  const id=e.target.closest('button')?.id;
+  if(id==='all'){errs().forEach((_,n)=>S.on.add(n));render()}
+  else if(id==='reset'){S.on.clear();render()}
+  else if(id==='sp'||id==='sa'||id==='cmp'){S[id]=!S[id];render()}
+});
+document.addEventListener('keydown',e=>{
+  if(e.target.closest('input,textarea'))return;
+  const tabs=['mark','score','rev','common'];
+  if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const i=tabs.indexOf(S.t)+(e.key==='ArrowRight'?1:-1);if(i>=0&&i<tabs.length){S.t=tabs[i];store.set('t',S.t);render()}}
+  else if(e.key===' '&&S.t==='mark'&&S.mode==='mark'){e.preventDefault();const n=errs().findIndex((_,k)=>!S.on.has(k));if(n>=0)reveal(n)}
+});
+render();
+if('serviceWorker' in navigator&&location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+}
+</script>
+</body>
+</html>
