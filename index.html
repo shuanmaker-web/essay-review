@@ -84,6 +84,37 @@ main{padding:20px max(4vw,16px) 48px;max-width:1320px;margin:0 auto}
 .scale div{background:var(--chip);border-radius:4px;padding:6px 4px;text-align:center;font-size:13px}
 .scale div.cur{background:var(--redsoft);color:var(--red);font-weight:700}
 .pin{position:absolute;top:-24px;transform:translateX(-50%);color:var(--red);font-weight:800;font-size:13px;white-space:nowrap}
+.pseg{margin-bottom:16px}
+.ptype{display:inline-block;background:var(--redsoft);color:var(--red);font-weight:700;border-radius:8px;padding:2px 10px;font-size:14px;margin-bottom:10px}
+.pbox{border:1.5px solid var(--ink);border-radius:14px;padding:16px 20px;font-size:calc(var(--fs) * .82);line-height:1.75;margin-bottom:16px}
+.pbox p{margin:0}.pbox p+p{margin-top:8px}
+.hints{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px}
+.hints div{background:var(--chip);border-radius:12px;padding:12px 16px;font-size:15px}
+.hints b{display:block;color:var(--red);margin-bottom:4px}
+.hints ul{margin:0;padding-left:18px;font-family:"Source Serif 4",serif;font-size:16px}
+.struct{display:flex;flex-direction:column;gap:6px}
+.struct h3{margin:18px 0 6px;font-size:17px}
+.struct h3:first-child{margin-top:0}
+.srow{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:4px 14px;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--paper)}
+.srow .role{font-weight:700;color:var(--red);font-size:14px;padding-top:3px}
+.srow .sen{font:calc(var(--fs) * .85)/1.65 "Source Serif 4",serif}
+.srow .sen mark{background:linear-gradient(transparent 55%,var(--hi) 55%);color:inherit}
+.srow .sen mark sub{display:none}
+.srow .why{grid-column:2;color:var(--mute);font-size:14px}
+@media(max-width:600px){.srow{grid-template-columns:minmax(0,1fr)}.srow .why{grid-column:1}}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 14px;font-size:14px}
+.flow span{background:var(--chip);border-radius:999px;padding:4px 12px;white-space:nowrap}
+.flow i{color:var(--mute);font-style:normal}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:12px;margin-bottom:22px}
+.kp div{border:1.5px solid var(--line);border-radius:14px;padding:12px 16px}
+.kp .ph{font:600 calc(var(--fs) * .85)/1.4 "Source Serif 4",serif}
+.kp .zh{color:var(--red);font-weight:600;font-size:15px}
+.kp .eg{color:var(--mute);font:15px/1.6 "Source Serif 4",serif;margin-top:4px}
+.voc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:8px}
+.voc div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:8px 2px;font-size:15px}
+.voc b{font:600 17px "Source Serif 4",serif}
+.sub{font-size:18px;margin:4px 0 10px}
+.mnote{font-size:15px;color:var(--mute);margin-top:12px}
 .rows{display:flex;flex-direction:column;gap:14px}
 .row h3{display:flex;justify-content:space-between;margin:0 0 6px;font-size:17px}
 .row h3 span{white-space:nowrap;color:var(--red)}
@@ -127,6 +158,7 @@ th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-a
     <button role="tab" data-t="score">評分</button>
     <button role="tab" data-t="rev">修改範文</button>
     <button role="tab" data-t="common">共同問題</button>
+    <button role="tab" data-t="prac">練習題</button>
   </nav>
 </header>
 <main id="main"></main>
@@ -164,10 +196,51 @@ const COMMON=[
 ['中式英文','直接換成課本 p.30、p.32 的實用句型。',[['promote their own ability','improve themselves'],['In the benefit hand / In disadvantage hand','On the one hand / On the other hand'],['steal my attention','distract me']]],
 ['連接詞與逗號','although / because 不再接 but / so；逗號不能連接兩個完整句子。',[['Although …, but we can\'t …','Although …, we can\'t …'],['I have experienced this kind of study form, it can …','I have experienced this kind of study, and it can …']]]
 ];
+const PR=[
+{name:'練習一',title:'志工服務時數',type:'寫作(一)｜表個人看法＋為達目的，實行計畫',
+prompt:'越來越多高中將「志工服務時數」列為畢業條件之一，希望學生透過服務他人培養責任感與同理心。請寫一篇兩段式的英文作文。第一段說明你是否認同學校將志工服務列為畢業門檻，並陳述理由；第二段說明如果你必須在一學期內完成 20 小時的志工服務，你會選擇什麼樣的服務、如何安排時間，並說明原因。',
+hints:[['第一段：表態＋理由',['From my perspective, … / As far as I\'m concerned, …','Firstly… Additionally… Lastly…','It is important for sb. to V.','enable sb. to V.']],['第二段：實行計畫',['To achieve this goal, … / In order to V…','By V-ing…','To begin with… Besides… What\'s more…','Through executing these plans, …']]],
+tip:'第二段要具體：去哪裡、每週何時、做什麼、為什麼選它。',
+flow:[['表態','三個理由','總結'],['假設＋選擇','時間','工作內容','方法','原因','總結']],
+paras:[
+[['主題句｜表態','[[From my perspective|表個人看法]], it is a positive policy for high schools to make volunteer service a graduation requirement.','第一句就直接回答題目「是否認同」。'],
+['理由一','[[Firstly|首先]], serving others [[enables students to|enable sb. to V]] step out of their comfort zones and understand the needs of people around them.','enable sb. to V.：讓某人能夠…'],
+['理由二','[[Additionally|此外]], volunteer work helps students develop a sense of responsibility, since others are counting on them to show up and do their part.','用 since 補充原因，讓理由更有說服力。'],
+['理由三','[[Lastly|最後]], [[it is important for|表重要性]] teenagers [[to|表重要性]] realize that learning does not only happen in the classroom.','It is important for sb. to V.'],
+['結論句','[[Overall|整體而言]], I believe volunteer service can make students more caring and mature.','用 Overall 收尾，呼應主題句。']],
+[['主題句｜選擇','If I were required to complete twenty hours of volunteer service in one semester, I would choose to help at a local animal shelter.','If I were…, I would… 假設語氣，整段都用 would。'],
+['安排一：時間','[[To begin with|首先]], I would spend two hours there every Saturday morning, which would allow me to finish the hours in ten weeks without affecting my schoolwork.','寫出具體時間和數字（每週六兩小時 × 十週）。'],
+['安排二：內容','[[Besides|此外]], I would take on tasks such as cleaning cages, feeding the animals, and walking the dogs.','用 such as 列出具體的工作內容。'],
+['安排三：方法','[[What\'s more|再者]], I would invite a classmate to join me [[so that|為達目的]] we could encourage each other to keep going.','so that S could V：表達目的。'],
+['原因','I chose this kind of service because I have always loved animals and hope to help them find new homes.','題目要求「說明原因」，不能漏掉。'],
+['結論句','[[Through executing these plans|透過…達到目的]], I believe I can not only meet the requirement but also learn to be more patient and responsible.','not only… but also… 讓結尾更完整。']]],
+phrases:[['From my perspective, …','就我看來，…','From my perspective, it is a positive policy…'],['enable sb. to V','使某人能夠…','serving others enables students to step out of their comfort zones'],['It is important for sb. to V','對某人來說…是很重要的','it is important for teenagers to realize that…'],['If I were…, I would…','假設語氣：如果我…，我會…','If I were required to…, I would choose to…'],['…, which would allow me to V','…，這能讓我…','which would allow me to finish the hours in ten weeks'],['so that S could V','以便…','so that we could encourage each other'],['Through executing these plans, …','透過執行這些計畫，…','Through executing these plans, I believe I can…']],
+vocab:[['graduation requirement','畢業門檻'],['step out of one\'s comfort zone','走出舒適圈'],['a sense of responsibility','責任感'],['count on sb.','指望、依靠某人'],['take on tasks','承擔工作'],['animal shelter','動物收容所'],['meet the requirement','達到要求'],['caring and mature','有愛心又成熟']]},
+{name:'練習二',title:'用 AI 工具寫作業',type:'寫作(二)｜優缺點／利弊／正反合',
+prompt:'近年來，越來越多學生使用 AI 工具（如 ChatGPT）協助完成作業，例如查資料、修改作文或解數學題。請寫一篇兩段式的英文作文。第一段根據自己或他人的經驗，討論學生使用 AI 工具寫作業的優缺點；第二段說明你認為學生應該如何使用 AI 工具，例如在什麼時候可以用、什麼時候不該用、如何避免過度依賴，並說明原因。',
+hints:[['第一段：優缺點',['There are both advantages and disadvantages to…','On the one hand, … On the other hand, …','While … has positive effects, it also has negative consequences.','The pros and cons of … should be carefully weighed.']],['第二段：看法＋做法',['Generally speaking, …','However, it is not unusual to see…','To lessen the negative impact, …','Overall, …']]],
+tip:'第一段的結論句（The pros and cons… should be carefully weighed.）放在第一段結尾。',
+flow:[['引言','優點','例子','缺點','後果','權衡'],['立場','可以用','不該用','原因','方法','總結']],
+paras:[
+[['引言','[[Generally speaking|一般來說]], AI tools have become part of many students\' daily lives, and [[there are both advantages and disadvantages to|表達優缺點]] using them for homework.','先帶出一般觀點，再點出「有優有缺」。to 後接 V-ing。'],
+['優點','[[On the one hand|一方面]], AI can save students a great deal of time.','優點句簡短清楚，後面再用例子支撐。'],
+['例子','For example, when my classmate was stuck on a difficult math problem, an AI tool explained the steps to him clearly, just like a patient tutor.','題目要求「根據自己或他人的經驗」，這句就是經驗。'],
+['缺點','[[On the other hand|另一方面]], some students simply copy the answers without thinking.','On the one hand… On the other hand… 成對出現。'],
+['後果','As a result, they may finish their homework quickly but fail to learn anything.','fail to V：未能…；寫出缺點帶來的後果。'],
+['結論句｜權衡','Therefore, [[the pros and cons of|利弊權衡]] using AI for schoolwork [[should be carefully weighed|利弊權衡]].','第一段在這裡收尾，不要拖到第二段才講。']],
+[['主題句｜立場','[[As far as I\'m concerned|表個人看法]], students should treat AI as a study partner rather than a shortcut.','treat A as B rather than C：一句話說清楚立場。'],
+['可以用','[[Firstly|首先]], it is acceptable to use AI to check our answers or to explain concepts we do not understand.','回答提示中的「什麼時候可以用」。'],
+['不該用','[[However, it is not unusual to see|然而，…並不罕見]] students asking AI to write their essays for them.','see sb. V-ing：看到某人正在…'],
+['原因','I think this should be avoided, because writing is how we practice expressing our own ideas.','because 後面不再接 so。'],
+['具體方法','[[To lessen the negative impact|減少影響]], I suggest that students always try to solve a problem on their own for at least twenty minutes before asking AI for help.','回答「如何避免過度依賴」，並給具體數字。'],
+['結論句','[[Overall|整體而言]], if we use AI wisely, it can make learning more efficient instead of making us lazy.','呼應主題句的 study partner / shortcut。']]],
+phrases:[['There are both advantages and disadvantages to V-ing','…既有優點也有缺點','there are both advantages and disadvantages to using them'],['On the one hand, … On the other hand, …','一方面…，另一方面…','On the one hand, AI can save students a great deal of time.'],['The pros and cons of … should be carefully weighed.','…的利弊應該被仔細權衡','the pros and cons of using AI should be carefully weighed'],['treat A as B rather than C','把 A 當成 B 而不是 C','treat AI as a study partner rather than a shortcut'],['It is not unusual to see sb. V-ing','看到某人…並不罕見','it is not unusual to see students asking AI to…'],['To lessen the negative impact, …','為了減少負面影響，…','To lessen the negative impact, I suggest that…'],['I suggest that S (should) V','我建議…（原形動詞）','I suggest that students always try to…']],
+vocab:[['save a great deal of time','省下大量時間'],['be stuck on','卡在（問題）上'],['fail to V','未能…'],['a study partner','學習夥伴'],['a shortcut','捷徑'],['acceptable','可接受的'],['express one\'s ideas','表達想法'],['efficient','有效率的']]}
+];
 const LV=[['劣',0,4],['差',5,9],['可',10,14],['優',15,18],['特優',19,20]];
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const store={get(k,d){try{const v=localStorage.getItem('ew-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ew-'+k,JSON.stringify(v))}catch(e){}}};
-const S={e:store.get('e',0),t:store.get('t','mark'),mode:'mark',fs:store.get('fs',21),on:new Set(),sp:true,sa:true,cmp:false};
+const S={e:store.get('e',0),t:store.get('t','mark'),mode:'mark',fs:store.get('fs',21),p:store.get('p',0),pm:'q',on:new Set(),sp:true,sa:true,cmp:false};
 const main=document.getElementById('main');
 function errs(){const a=[];E[S.e].paras.forEach(p=>p.forEach(x=>{if(Array.isArray(x))a.push(x)}));return a}
 function origPlain(p){return p.map(x=>Array.isArray(x)?x[0]:x).join('')}
@@ -210,11 +283,26 @@ function viewRev(){
 function viewCommon(){
   return `<div class="cards">${COMMON.map((c,k)=>`<div class="card"><h3>${k+1}. ${c[0]}</h3><p>${c[1]}</p>${c[2].map(p=>`<div class="pair"><span class="a">${esc(p[0])}</span><span class="b">${esc(p[1])}</span></div>`).join('')}</div>`).join('')}</div>`;
 }
+function viewPrac(){
+  const q=PR[S.p];
+  const seg=`<div class="seg pseg">${[['q','題目'],['m','範文'],['a','結構分析'],['k','關鍵句型']].map(([k,l])=>`<button data-pm="${k}" aria-pressed="${S.pm===k}">${l}</button>`).join('')}</div>`;
+  let body='';
+  if(S.pm==='q')body=`<span class="ptype">${q.type}</span><div class="pbox"><p><b>說明：</b>依提示寫一篇英文作文，文長至少 120 個單詞（words）。</p><p><b>提示：</b>${q.prompt}</p></div>
+  <div class="hints">${q.hints.map(h=>`<div><b>${h[0]}</b><ul>${h[1].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}<div><b>提醒</b>${q.tip}<br>全篇人稱一致；although 不接 but、because 不接 so；逗號不連接兩個完整句子。</div></div>`;
+  else if(S.pm==='m'){const wc=q.paras.flat().map(s=>s[1].replace(/\[\[(.+?)\|.+?\]\]/g,'$1')).join(' ').split(/\s+/).length;
+  body=`<div class="bar"><button class="tog" id="sp" aria-pressed="${S.sp}">標示課本句型</button><span class="count">約 ${wc} words</span></div>
+  <div class="paper rev ${S.sp?'sp lb':''}">${q.paras.map(p=>`<p>${p.map(s=>rich(s[1])).join(' ')}</p>`).join('')}</div>
+  <p class="mnote">黃色螢光：課本 p.30、p.32 的實用句型。範文程度約「優」，供學生寫完後對照。</p>`}
+  else if(S.pm==='a')body=`<div class="struct">${q.paras.map((p,k)=>`<h3>第${k?'二':'一'}段</h3><div class="flow">${q.flow[k].map(f=>`<span>${f}</span>`).join('<i>→</i>')}</div>${p.map(s=>`<div class="srow"><span class="role">${s[0]}</span><span class="sen">${rich(s[1])}</span><span class="why">${esc(s[2])}</span></div>`).join('')}`).join('')}</div>`;
+  else body=`<h3 class="sub">關鍵句型</h3><div class="kp">${q.phrases.map(x=>`<div><div class="ph">${esc(x[0])}</div><div class="zh">${x[1]}</div><div class="eg">${esc(x[2])}</div></div>`).join('')}</div>
+  <h3 class="sub">實用詞彙</h3><div class="voc">${q.vocab.map(v=>`<div><b>${esc(v[0])}</b><span>${v[1]}</span></div>`).join('')}</div>`;
+  return seg+body;
+}
 function render(){
   document.documentElement.style.setProperty('--fs',S.fs+'px');
-  document.getElementById('essays').innerHTML=E.map((x,k)=>`<button data-e="${k}" aria-pressed="${k===S.e}" ${S.t==='common'?'disabled style="opacity:.5"':''}>${x.name}｜${x.topic}</button>`).join('');
+  document.getElementById('essays').innerHTML=S.t==='prac'?PR.map((x,k)=>`<button data-p="${k}" aria-pressed="${k===S.p}">${x.name}｜${x.title}</button>`).join(''):E.map((x,k)=>`<button data-e="${k}" aria-pressed="${k===S.e}" ${S.t==='common'?'disabled style="opacity:.5"':''}>${x.name}｜${x.topic}</button>`).join('');
   document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===S.t));
-  main.innerHTML=S.t==='mark'?viewMark():S.t==='score'?viewScore():S.t==='rev'?viewRev():viewCommon();
+  main.innerHTML=S.t==='mark'?viewMark():S.t==='score'?viewScore():S.t==='rev'?viewRev():S.t==='prac'?viewPrac():viewCommon();
 }
 function reveal(n){
   if(S.mode!=='mark')return;
@@ -223,11 +311,12 @@ function reveal(n){
   const sp=main.querySelector(`.err[data-i="${n}"]`);
   if(sp){sp.classList.add('flash');const r=sp.getBoundingClientRect();if(r.top<140||r.bottom>innerHeight)sp.scrollIntoView({block:'center',behavior:'smooth'})}
 }
-document.getElementById('essays').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;S.e=+b.dataset.e;S.on.clear();store.set('e',S.e);render()});
+document.getElementById('essays').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.p!=null){S.p=+b.dataset.p;store.set('p',S.p);render();return}S.e=+b.dataset.e;S.on.clear();store.set('e',S.e);render()});
 document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.t=b.dataset.t;store.set('t',S.t);render();window.scrollTo(0,0)});
 document.getElementById('fsm').addEventListener('click',()=>{S.fs=Math.max(15,S.fs-2);store.set('fs',S.fs);render()});
 document.getElementById('fsp').addEventListener('click',()=>{S.fs=Math.min(34,S.fs+2);store.set('fs',S.fs);render()});
 main.addEventListener('click',e=>{
+  const pm=e.target.closest('[data-pm]');if(pm){S.pm=pm.dataset.pm;render();return}
   const m=e.target.closest('[data-m]');if(m){S.mode=m.dataset.m;render();return}
   const er=e.target.closest('.err,.note');if(er){reveal(+er.dataset.i);return}
   const id=e.target.closest('button')?.id;
@@ -237,7 +326,7 @@ main.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.target.closest('input,textarea'))return;
-  const tabs=['mark','score','rev','common'];
+  const tabs=['mark','score','rev','common','prac'];
   if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const i=tabs.indexOf(S.t)+(e.key==='ArrowRight'?1:-1);if(i>=0&&i<tabs.length){S.t=tabs[i];store.set('t',S.t);render()}}
   else if(e.key===' '&&S.t==='mark'&&S.mode==='mark'){e.preventDefault();const n=errs().findIndex((_,k)=>!S.on.has(k));if(n>=0)reveal(n)}
 });
